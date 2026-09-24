@@ -53,33 +53,64 @@ Clean, Searchable, Professional PDF
 
 ---
 
+## Prerequisites
+
+| Requirement | Needed? | Details |
+| :--- | :---: | :--- |
+| **Operating System** | Yes | Windows 10/11, macOS 11+, or modern Linux |
+| **PowerShell / Terminal** | Yes | Built into Windows (PowerShell), macOS (Terminal), and Linux (Bash) |
+| **Python** | Automatic | If Python 3.10+ is detected, it is reused. If missing, the Windows installer can automatically download and provision official Python 3.10.8 safely into a private app directory. |
+| **Git** | **No** | Not required for end-users. You can download the project ZIP directly from GitHub. |
+| **Internet during conversion** | **No** | Conversions operate 100% locally and offline without external API keys or network requests. |
+
+---
+
 ## Installation
 
-### Option 1: Install via pipx (Recommended for CLI Tools)
+### Option 1: Install Without Git (Download ZIP - Recommended for End Users)
+If you do not have Git installed on your computer:
+1. Open this repository on GitHub in your web browser:
+   `https://github.com/swayamprabhu2005/AI-Conversation-CLI`
+2. Click the green **`<> Code`** button near the top right, then click **`Download ZIP`**.
+3. Extract the downloaded `.zip` file to any temporary folder (e.g. your Downloads folder).
+4. Run the installer for your operating system:
+   - **Windows (PowerShell)**:
+     Right-click `scripts\install-windows.ps1` and select **"Run with PowerShell"**, or open PowerShell inside the extracted folder and run:
+     ```powershell
+     Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+     .\scripts\install-windows.ps1
+     ```
+   - **macOS (Terminal)**:
+     ```bash
+     chmod +x scripts/install-macos.sh
+     ./scripts/install-macos.sh
+     ```
+   - **Linux (Bash)**:
+     ```bash
+     chmod +x scripts/install-linux.sh
+     ./scripts/install-linux.sh
+     ```
+5. **How the Setup Progresses**:
+   - **Step 1 - Python Verification**: The script checks if Python 3.10.8 is present. If missing, it asks:
+     `Download official Python 3.10.8 installer from python.org? [Y/n]`
+     Selecting `Y` downloads the official installer, verifies its SHA-256 cryptographic checksum, and installs Python into a private application folder without touching your system's global settings.
+   - **Step 2 - Installation Folder**: The installer asks where to place the application:
+     `Where would you like to install AI Conversation CLI?`
+     `Default: C:\Users\<Username>\AppData\Local\AIConversationCLI`
+     Press **Enter** to accept the default, or type any custom location (e.g. `D:\Tools\AIConversationCLI`).
+   - **Step 3 - PATH Registration**: The installer adds the executable to your user `PATH`.
+   - **Step 4 - Verification**: It runs `ai-conversation doctor` to verify system readiness.
+6. Once complete, you can safely delete the extracted `.zip` folder. The application is permanently installed and ready to run from any terminal!
+
+### Option 2: Install via pipx (For Users with Python & pipx)
 ```bash
 pipx install git+https://github.com/swayamprabhu2005/AI-Conversation-CLI.git
 ```
 
-### Option 2: Automated Bootstrap Installer
-The project includes self-contained installation scripts that verify your Python runtime (target: **Python 3.10.8**), provision an isolated environment, and register the CLI on your PATH:
-
-- **Windows (PowerShell)**:
-  ```powershell
-  Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
-  .\scripts\install-windows.ps1
-  ```
-- **macOS (Terminal)**:
-  ```bash
-  chmod +x scripts/install-macos.sh
-  ./scripts/install-macos.sh
-  ```
-- **Linux (Bash)**:
-  ```bash
-  chmod +x scripts/install-linux.sh
-  ./scripts/install-linux.sh
-  ```
-
 ### Option 3: Developer Installation from Source
+> [!NOTE]
+> This option is intended for developers contributing to the codebase. End-users do not need to run this.
+
 ```bash
 git clone https://github.com/swayamprabhu2005/AI-Conversation-CLI.git
 cd AI-Conversation-CLI
@@ -280,11 +311,17 @@ python -m pytest -v
 python -m ruff check src tests
 ```
 
-### Building the Package
+### Building the Distribution Packages (Maintainers Only)
+> [!NOTE]
+> End-users do **not** need to run this command. This command is strictly for project maintainers when preparing a new GitHub release or distributing wheels.
+
 ```bash
 python -m build
 ```
-This generates standard `.whl` and `.tar.gz` distribution packages in the `dist/` directory.
+This compiles the project into distribution assets inside the `dist/` folder:
+- `ai_conversation-0.1.0-py3-none-any.whl` (pre-compiled wheel)
+- `ai_conversation-0.1.0.tar.gz` (source archive)
+These files can then be uploaded directly to GitHub Releases.
 
 ---
 
