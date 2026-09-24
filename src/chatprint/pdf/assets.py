@@ -1,5 +1,6 @@
 """Layout and text formatting helpers for ReportLab flowables."""
 
+import contextlib
 import html
 import re
 
@@ -38,11 +39,9 @@ def safe_reportlab_text(text: str) -> str:
     text = re.sub(r"\[(.+?)\]\((https?://[^\s)]+)\)", r'<link href="\2" color="#1a73e8"><u>\1</u></link>', text)
 
     # Balance any interleaved or unclosed tags
-    try:
+    with contextlib.suppress(Exception):
         from bs4 import BeautifulSoup
         text = str(BeautifulSoup(text, "html.parser"))
-    except Exception:
-        pass
 
     return text
 

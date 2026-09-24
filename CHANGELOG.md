@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.2] - 2026-09-24
+
+### Fixed
+- Fixed GitHub Actions CI linter failure (`ruff` rule S110 in `assets.py` using `contextlib.suppress`).
+- Fixed import sorting in `renderer.py` adhering strictly to PEP8 and Ruff standard rules.
+- Fixed uninstaller detection for custom drive installations (e.g. `E:\ChatPrintCLI`) by writing an install directory marker, scanning system drives, and prompting for path confirmation.
+
+### Added
+- Added direct `pip install .` installation documentation to `README.md`.
+- Added uninstallation guide and command instructions to `README.md`.
+
 ## [0.1.1] - 2026-09-24
 
 ### Added

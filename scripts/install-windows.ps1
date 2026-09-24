@@ -100,6 +100,13 @@ if (!(Test-Path $InstallDir)) {
     New-Item -ItemType Directory -Force -Path $InstallDir | Out-Null
 }
 
+# Save install location for uninstaller
+$ConfigDir = Join-Path $env:USERPROFILE ".chatprint"
+if (!(Test-Path $ConfigDir)) {
+    New-Item -ItemType Directory -Force -Path $ConfigDir | Out-Null
+}
+Set-Content -Path (Join-Path $ConfigDir "install_path.txt") -Value $InstallDir -Force
+
 # 4. Virtual Environment Creation
 $VenvDir = Join-Path $InstallDir "venv"
 Write-Host "Creating isolated environment at $VenvDir..." -ForegroundColor Cyan

@@ -108,12 +108,19 @@ If you do not have Git installed on your computer:
    - **Step 4 - Verification**: It runs `chatprint doctor` to verify system readiness.
 6. Once complete, you can safely delete the extracted `.zip` folder. The application is permanently installed and ready to run from any terminal!
 
-### Option 2: Install via pipx (For Users with Python & pipx)
+### Option 2: Direct Install via pip (If Python is already installed)
+If you already have Python (3.10+) installed on your computer, open a command prompt / terminal inside the extracted folder and run:
+```bash
+pip install .
+```
+This directly installs `chatprint` globally into your Python environment so you can run `chatprint` immediately.
+
+### Option 3: Install via pipx (Isolated CLI environment)
 ```bash
 pipx install git+https://github.com/swayamprabhu2005/chatprint-CLI.git
 ```
 
-### Option 3: Developer Installation from Source
+### Option 4: Developer Installation from Source
 > [!NOTE]
 > This option is intended for developers contributing to the codebase. End-users do not need to run this.
 
@@ -311,6 +318,29 @@ This automatically:
                              │
                              ▼
                  High-Quality Vector PDF
+```
+
+---
+
+## Uninstallation
+
+If you wish to uninstall ChatPrint CLI from your system:
+
+### Windows:
+1. Double-click **`uninstall.bat`** (or open PowerShell and run `powershell -ExecutionPolicy Bypass -File .\scripts\uninstall-windows.ps1`).
+2. The uninstaller automatically detects your installed location (whether default in `AppData` or a custom drive like `E:\ChatPrintCLI`).
+3. Confirm by pressing **Y**. The uninstaller cleanly removes all installed files and removes `ChatPrintCLI` from your User `PATH`.
+
+### If Installed via pip:
+```bash
+pip uninstall chatprint
+```
+
+### macOS / Linux:
+```bash
+./scripts/uninstall-macos.sh
+# or if installed via pip:
+pip uninstall chatprint
 ```
 
 ---

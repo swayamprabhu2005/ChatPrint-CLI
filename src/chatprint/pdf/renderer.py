@@ -1,5 +1,7 @@
 """Platypus document builder that compiles a Conversation model into a clean PDF."""
 
+import html
+import re
 from pathlib import Path
 
 from reportlab.lib.colors import HexColor
@@ -40,8 +42,6 @@ def _safe_para(text: str, style) -> Paragraph:
     try:
         return Paragraph(text, style)
     except Exception:
-        import html
-        import re
         plain = re.sub(r"<[^>]+>", "", text)
         return Paragraph(html.escape(plain), style)
 
