@@ -1,6 +1,6 @@
-# Troubleshooting Guide
+﻿# Troubleshooting Guide
 
-Common issues, diagnostics, and recovery solutions for **AI Conversation CLI**.
+Common issues, diagnostics, and recovery solutions for **ChatPrint CLI**.
 
 ---
 
@@ -8,7 +8,7 @@ Common issues, diagnostics, and recovery solutions for **AI Conversation CLI**.
 
 Whenever you encounter unexpected behavior or environment issues, run:
 ```bash
-ai-conversation doctor -v
+chatprint doctor -v
 ```
 This verifies your Python version, architecture, required dependencies, PDF engine, and PATH availability.
 
@@ -38,10 +38,10 @@ This verifies your Python version, architecture, required dependencies, PDF engi
 Force the provider explicitly using the `--source` option:
 ```bash
 # For Gemini / Google AI Mode
-ai-conversation convert "page.mhtml" --source gemini
+chatprint convert "page.mhtml" --source gemini
 
 # For ChatGPT
-ai-conversation convert "page.mhtml" --source chatgpt
+chatprint convert "page.mhtml" --source chatgpt
 ```
 
 ---
@@ -49,31 +49,31 @@ ai-conversation convert "page.mhtml" --source chatgpt
 ### Issue: Want to see what was extracted without creating a PDF
 Use the `inspect` command:
 ```bash
-ai-conversation inspect "page.mhtml"
+chatprint inspect "page.mhtml"
 ```
 Or run with `--debug`:
 ```bash
-ai-conversation convert "page.mhtml" --debug
+chatprint convert "page.mhtml" --debug
 ```
 
 ---
 
 ### Issue: Output PDF already exists and is not overwritten
-**Default Behavior**: AI Conversation CLI avoids destroying existing files by creating `filename-1.pdf`, `filename-2.pdf`, etc.
+**Default Behavior**: ChatPrint CLI avoids destroying existing files by creating `filename-1.pdf`, `filename-2.pdf`, etc.
 **Solution**:
 Pass `--force` to explicitly allow overwriting:
 ```bash
-ai-conversation convert "page.mhtml" --force
+chatprint convert "page.mhtml" --force
 ```
 
 ---
 
-### Issue: Command `ai-conversation` is not recognized after install
+### Issue: Command `chatprint` is not recognized after install
 **Cause**: The installation directory is not in your current terminal's `PATH`.
 **Solution**:
 1. Restart your terminal window to reload PATH.
-2. Run `ai-conversation doctor` or check `%LOCALAPPDATA%\AIConversationCLI\venv\Scripts` (Windows) or `~/.local/share/ai-conversation-cli/venv/bin` (Linux/macOS).
+2. Run `chatprint doctor` or check `%LOCALAPPDATA%\ChatPrintCLI\venv\Scripts` (Windows) or `~/.local/share/chatprint-cli/venv/bin` (Linux/macOS).
 3. Alternatively, invoke directly with Python:
    ```bash
-   python -m ai_conversation convert "chat.mhtml"
+   python -m chatprint convert "chat.mhtml"
    ```

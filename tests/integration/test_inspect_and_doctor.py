@@ -4,7 +4,7 @@ from pathlib import Path
 
 from click.testing import CliRunner
 
-from ai_conversation.cli import cli
+from chatprint.cli import cli
 
 
 def test_cli_inspect_gemini(gemini_with_sidebar_mhtml: Path):

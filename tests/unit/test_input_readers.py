@@ -4,10 +4,10 @@ from pathlib import Path
 
 import pytest
 
-from ai_conversation.errors import InvalidInputError, MHTMLParseError
-from ai_conversation.input.detector import InputFormat, detect_format
-from ai_conversation.input.html_reader import read_html_file
-from ai_conversation.input.mhtml_reader import read_mhtml_file
+from chatprint.errors import InvalidInputError, MHTMLParseError
+from chatprint.input.detector import InputFormat, detect_format
+from chatprint.input.html_reader import read_html_file
+from chatprint.input.mhtml_reader import read_mhtml_file
 
 
 def test_detect_format_html(gemini_simple_html: Path):

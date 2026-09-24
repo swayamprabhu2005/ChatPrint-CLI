@@ -1,4 +1,4 @@
-"""Pytest configuration and shared fixtures for AI Conversation CLI."""
+"""Pytest configuration and shared fixtures for ChatPrint CLI."""
 
 from pathlib import Path
 

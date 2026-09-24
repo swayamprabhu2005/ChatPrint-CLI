@@ -1,6 +1,6 @@
-# Contributing to AI Conversation CLI
+﻿# Contributing to ChatPrint CLI
 
-Thank you for your interest in contributing to AI Conversation CLI!
+Thank you for your interest in contributing to ChatPrint CLI!
 
 ## Code of Conduct
 Please be respectful and constructive in all discussions, pull requests, and issue reports.
@@ -9,8 +9,8 @@ Please be respectful and constructive in all discussions, pull requests, and iss
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/swayamprabhu2005/AI-Conversation-CLI.git
-   cd AI-Conversation-CLI
+   git clone https://github.com/swayamprabhu2005/chatprint-CLI.git
+   cd chatprint-CLI
    ```
 
 2. Create a virtual environment using Python 3.10:
@@ -29,8 +29,8 @@ Please be respectful and constructive in all discussions, pull requests, and iss
 
 4. Verify installation:
    ```bash
-   ai-conversation --version
-   ai-conversation doctor
+   chatprint --version
+   chatprint doctor
    ```
 
 ## Running Tests
@@ -44,11 +44,11 @@ Run linter:
 ruff check src tests
 ```
 
-## Adding a New AI Conversation Provider
+## Adding a New ChatPrint Provider
 To add support for a new provider:
-1. Create a new file in `src/ai_conversation/providers/<provider_name>.py`.
-2. Inherit from `ConversationProvider` in `src/ai_conversation/providers/base.py`.
+1. Create a new file in `src/chatprint/providers/<provider_name>.py`.
+2. Inherit from `ConversationProvider` in `src/chatprint/providers/base.py`.
 3. Implement `detect_confidence` and `extract`.
-4. Register the provider in `src/ai_conversation/providers/__init__.py`.
+4. Register the provider in `src/chatprint/providers/__init__.py`.
 5. Add representative fixtures in `tests/fixtures/<provider_name>/`.
 6. Add unit and integration tests.

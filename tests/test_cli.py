@@ -4,8 +4,8 @@ from pathlib import Path
 
 from click.testing import CliRunner
 
-from ai_conversation import __version__
-from ai_conversation.cli import cli
+from chatprint import __version__
+from chatprint.cli import cli
 
 
 def test_cli_version():

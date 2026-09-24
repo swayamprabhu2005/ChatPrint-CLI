@@ -2,7 +2,7 @@
 
 from bs4 import BeautifulSoup
 
-from ai_conversation.providers.generic import GenericProvider
+from chatprint.providers.generic import GenericProvider
 
 
 def test_generic_provider_extraction():

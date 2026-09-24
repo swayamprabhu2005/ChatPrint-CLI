@@ -4,8 +4,8 @@ from pathlib import Path
 
 import pytest
 
-from ai_conversation.errors import InvalidInputError
-from ai_conversation.utils.security import ensure_safe_path, sanitize_filename
+from chatprint.errors import InvalidInputError
+from chatprint.utils.security import ensure_safe_path, sanitize_filename
 
 
 def test_sanitize_filename():

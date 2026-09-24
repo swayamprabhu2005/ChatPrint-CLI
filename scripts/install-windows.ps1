@@ -1,10 +1,10 @@
-# AI Conversation CLI - Windows Installer & Python 3.10.8 Bootstrapper
+﻿# ChatPrint CLI - Windows Installer & Python 3.10.8 Bootstrapper
 # Requires PowerShell 5.1+
 
 $ErrorActionPreference = "Stop"
 
 Write-Host "==================================================" -ForegroundColor Cyan
-Write-Host "          AI Conversation CLI Setup               " -ForegroundColor Cyan
+Write-Host "          ChatPrint CLI Setup               " -ForegroundColor Cyan
 Write-Host "==================================================" -ForegroundColor Cyan
 Write-Host ""
 
@@ -41,7 +41,7 @@ if ($FoundPython) {
     $PythonExe = $FoundPython
 } else {
     Write-Host "Python $TargetVersion was not detected on this system." -ForegroundColor Yellow
-    Write-Host "AI Conversation CLI recommends Python $TargetVersion for stability."
+    Write-Host "ChatPrint CLI recommends Python $TargetVersion for stability."
     $Choice = Read-Host "Download official Python $TargetVersion installer from python.org? [Y/n]"
     if ($Choice -ne "" -and $Choice -notmatch "^[yY]") {
         Write-Host "Installation aborted. Please install Python 3.10.8 and rerun setup." -ForegroundColor Red
@@ -67,7 +67,7 @@ if ($FoundPython) {
     Write-Host "✓ SHA-256 checksum verified ($ActualHash)" -ForegroundColor Green
 
     # Install into private directory without global interference
-    $PrivatePythonDir = "$env:LOCALAPPDATA\AIConversationCLI\runtime"
+    $PrivatePythonDir = "$env:LOCALAPPDATA\ChatPrintCLI\runtime"
     Write-Host "Installing Python into private runtime: $PrivatePythonDir" -ForegroundColor Cyan
     Start-Process -FilePath $TempInstaller -ArgumentList "/quiet InstallAllUsers=0 TargetDir=`"$PrivatePythonDir`" PrependPath=0" -Wait
     Remove-Item -Force $TempInstaller
@@ -75,9 +75,9 @@ if ($FoundPython) {
 }
 
 # 3. Destination Directory Prompt
-$DefaultInstallDir = "$env:LOCALAPPDATA\AIConversationCLI"
+$DefaultInstallDir = "$env:LOCALAPPDATA\ChatPrintCLI"
 Write-Host ""
-Write-Host "Where would you like to install AI Conversation CLI?" -ForegroundColor Cyan
+Write-Host "Where would you like to install ChatPrint CLI?" -ForegroundColor Cyan
 Write-Host "Default: $DefaultInstallDir" -ForegroundColor Gray
 $UserDir = Read-Host "Enter path (leave empty for default)"
 $InstallDir = if ([string]::IsNullOrWhiteSpace($UserDir)) { $DefaultInstallDir } else { $UserDir.Trim() }
@@ -94,10 +94,10 @@ Write-Host "Creating isolated environment at $VenvDir..." -ForegroundColor Cyan
 
 $VenvPip = Join-Path $VenvDir "Scripts\pip.exe"
 $VenvPython = Join-Path $VenvDir "Scripts\python.exe"
-$VenvCli = Join-Path $VenvDir "Scripts\ai-conversation.exe"
+$VenvCli = Join-Path $VenvDir "Scripts\chatprint.exe"
 
 # 5. Install Dependencies and CLI
-Write-Host "Installing AI Conversation CLI and dependencies..." -ForegroundColor Cyan
+Write-Host "Installing ChatPrint CLI and dependencies..." -ForegroundColor Cyan
 $RepoRoot = (Get-Item $PSScriptRoot).Parent.FullName
 & $VenvPip install --upgrade pip | Out-Null
 & $VenvPip install $RepoRoot
@@ -122,9 +122,9 @@ if (Test-Path $VenvCli) {
     & $VenvCli doctor
     Write-Host ""
     Write-Host "==================================================" -ForegroundColor Green
-    Write-Host "    AI Conversation CLI installed successfully!   " -ForegroundColor Green
+    Write-Host "    ChatPrint CLI installed successfully!   " -ForegroundColor Green
     Write-Host "==================================================" -ForegroundColor Green
-    Write-Host "You can now run 'ai-conversation' from any new PowerShell or CMD window." -ForegroundColor White
+    Write-Host "You can now run 'chatprint' from any new PowerShell or CMD window." -ForegroundColor White
 } else {
     Write-Host "Warning: Executable not found at $VenvCli" -ForegroundColor Yellow
 }

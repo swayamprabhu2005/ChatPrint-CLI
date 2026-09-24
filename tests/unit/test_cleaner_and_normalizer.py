@@ -2,12 +2,12 @@
 
 from bs4 import BeautifulSoup
 
-from ai_conversation.extraction.cleaner import clean_dom
-from ai_conversation.extraction.normalizer import (
+from chatprint.extraction.cleaner import clean_dom
+from chatprint.extraction.normalizer import (
     element_to_content_blocks,
     normalize_text,
 )
-from ai_conversation.models import (
+from chatprint.models import (
     CodeBlock,
     HeadingBlock,
     ListBlock,

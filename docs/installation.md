@@ -1,6 +1,6 @@
-# Installation & Setup Guide
+﻿# Installation & Setup Guide
 
-This guide covers all methods to install, configure, and verify **AI Conversation CLI**.
+This guide covers all methods to install, configure, and verify **ChatPrint CLI**.
 
 ---
 
@@ -22,12 +22,12 @@ This guide covers all methods to install, configure, and verify **AI Conversatio
 # macOS: brew install pipx
 # Linux: sudo apt install pipx
 
-pipx install git+https://github.com/swayamprabhu2005/AI-Conversation-CLI.git
+pipx install git+https://github.com/swayamprabhu2005/chatprint-CLI.git
 ```
 
 To upgrade in the future:
 ```bash
-pipx upgrade ai-conversation
+pipx upgrade chatprint
 ```
 
 ---
@@ -47,10 +47,10 @@ The installer:
 2. Looks for Python 3.10.8. If missing, requests consent to download official `python-3.10.8-amd64.exe` from `python.org`.
 3. Verifies SHA-256 cryptographic checksum against official release:
    `6b896b0fd01e8cffadcf2fd75a9fe847248e5828ae8f92167812ec1e57c6b90f`
-4. Prompts for an installation directory (default: `%LOCALAPPDATA%\AIConversationCLI`).
+4. Prompts for an installation directory (default: `%LOCALAPPDATA%\ChatPrintCLI`).
 5. Creates a private virtual environment and installs the CLI.
 6. Registers the executable to your User `PATH`.
-7. Runs `ai-conversation doctor` to confirm readiness.
+7. Runs `chatprint doctor` to confirm readiness.
 
 ### Linux (Bash)
 ```bash
@@ -69,8 +69,8 @@ chmod +x scripts/install-macos.sh
 ## Method 3: Developer Installation from Source
 
 ```bash
-git clone https://github.com/swayamprabhu2005/AI-Conversation-CLI.git
-cd AI-Conversation-CLI
+git clone https://github.com/swayamprabhu2005/chatprint-CLI.git
+cd chatprint-CLI
 
 python -m venv .venv
 # On Windows:
@@ -83,6 +83,6 @@ pip install -e ".[dev]"
 
 Verify installation:
 ```bash
-ai-conversation --version
-ai-conversation doctor
+chatprint --version
+chatprint doctor
 ```

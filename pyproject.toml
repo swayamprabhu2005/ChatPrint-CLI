@@ -3,13 +3,13 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "ai-conversation"
+name = "chatprint"
 version = "0.1.0"
 description = "Convert locally saved AI conversation webpages (Gemini, ChatGPT) into clean, professional PDFs."
 readme = "README.md"
 license = { text = "MIT" }
 authors = [
-    { name = "AI Conversation CLI Contributors" }
+    { name = "ChatPrint CLI Contributors" }
 ]
 requires-python = ">=3.10"
 classifiers = [
@@ -44,15 +44,15 @@ dev = [
 ]
 
 [project.scripts]
-ai-conversation = "ai_conversation.cli:main"
+chatprint = "chatprint.cli:main"
 
 [project.urls]
-Homepage = "https://github.com/swayamprabhu2005/AI-Conversation-CLI"
-Repository = "https://github.com/swayamprabhu2005/AI-Conversation-CLI"
-Issues = "https://github.com/swayamprabhu2005/AI-Conversation-CLI/issues"
+Homepage = "https://github.com/swayamprabhu2005/chatprint-CLI"
+Repository = "https://github.com/swayamprabhu2005/chatprint-CLI"
+Issues = "https://github.com/swayamprabhu2005/chatprint-CLI/issues"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/ai_conversation"]
+packages = ["src/chatprint"]
 
 [tool.ruff]
 line-length = 100

@@ -1,10 +1,10 @@
-# Supported Providers & Heuristic Rules
+﻿# Supported Providers & Heuristic Rules
 
 This document details the provider implementations for **Google Gemini AI Mode** and **ChatGPT**.
 
 ---
 
-## 1. GeminiProvider (`src/ai_conversation/providers/gemini.py`)
+## 1. GeminiProvider (`src/chatprint/providers/gemini.py`)
 
 ### Detection Signals
 - Snapshot location containing `gemini.google.com` or `google.com/search`.
@@ -26,7 +26,7 @@ This document details the provider implementations for **Google Gemini AI Mode**
 
 ---
 
-## 2. ChatGPTProvider (`src/ai_conversation/providers/chatgpt.py`)
+## 2. ChatGPTProvider (`src/chatprint/providers/chatgpt.py`)
 
 ### Detection Signals
 - Snapshot location containing `chatgpt.com` or `chat.openai.com`.
@@ -47,7 +47,7 @@ This document details the provider implementations for **Google Gemini AI Mode**
 
 ---
 
-## 3. GenericProvider (`src/ai_conversation/providers/generic.py`)
+## 3. GenericProvider (`src/chatprint/providers/generic.py`)
 
 Acts as an automated fallback when confidence for Gemini or ChatGPT is low or unknown.
 - Uses `score_conversation_container(tag)` to identify the highest density conversational area.

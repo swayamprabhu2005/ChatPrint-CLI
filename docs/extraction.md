@@ -1,6 +1,6 @@
-# Extraction Engine & Heuristics
+﻿# Extraction Engine & Heuristics
 
-This document details the multi-stage extraction pipeline used by AI Conversation CLI to extract conversations and eliminate surrounding webpage chrome.
+This document details the multi-stage extraction pipeline used by ChatPrint CLI to extract conversations and eliminate surrounding webpage chrome.
 
 ---
 
@@ -13,7 +13,7 @@ When a user saves a Google Gemini or ChatGPT webpage locally via Chrome, Edge, o
 - Action buttons: "Copy to clipboard", "Regenerate response", thumbs up/down, edit icons.
 - Footers and disclaimer texts ("ChatGPT can make mistakes", "Google Search terms").
 
-Rather than screenshotting or relying on a single fragile class name, AI Conversation CLI employs an 8-stage extraction pipeline:
+Rather than screenshotting or relying on a single fragile class name, ChatPrint CLI employs an 8-stage extraction pipeline:
 
 ```
 Stage 1: Document Decoding & Resource Extraction

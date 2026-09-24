@@ -3,13 +3,13 @@
 import hashlib
 from pathlib import Path
 
-from ai_conversation.installer.paths import get_default_install_dir, validate_install_dir
-from ai_conversation.installer.platform import get_platform_info
-from ai_conversation.installer.python_runtime import (
+from chatprint.installer.paths import get_default_install_dir, validate_install_dir
+from chatprint.installer.platform import get_platform_info
+from chatprint.installer.python_runtime import (
     check_python_version,
     verify_checksum,
 )
-from ai_conversation.installer.verification import run_doctor_check
+from chatprint.installer.verification import run_doctor_check
 
 
 def test_platform_info():
@@ -27,7 +27,7 @@ def test_python_runtime_check():
 
 def test_checksum_verification(tmp_path: Path):
     test_file = tmp_path / "test.bin"
-    content = b"AI Conversation CLI secure content"
+    content = b"ChatPrint CLI secure content"
     test_file.write_bytes(content)
 
     expected_sha256 = hashlib.sha256(content).hexdigest()
@@ -37,7 +37,7 @@ def test_checksum_verification(tmp_path: Path):
 
 def test_default_install_dir():
     dir_path = get_default_install_dir()
-    assert "AIConversationCLI" in str(dir_path) or "ai-conversation" in str(dir_path)
+    assert "ChatPrintCLI" in str(dir_path) or "chatprint" in str(dir_path)
 
 
 def test_validate_install_dir(tmp_path: Path):

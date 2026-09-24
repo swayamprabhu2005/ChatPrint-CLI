@@ -1,6 +1,6 @@
-# Architecture Guide
+﻿# Architecture Guide
 
-This document describes the internal design, component responsibilities, and data flow of **AI Conversation CLI**.
+This document describes the internal design, component responsibilities, and data flow of **ChatPrint CLI**.
 
 ---
 
@@ -58,12 +58,12 @@ Input File (.mhtml / .html)
 
 ## 3. Core Components
 
-### 3.1 Input Detection & Parsing (`src/ai_conversation/input/`)
+### 3.1 Input Detection & Parsing (`src/chatprint/input/`)
 - `detector.py`: Inspects file extension and first 4KB of content for multipart MIME markers (`Snapshot-Content-Location`, `MIME-Version: 1.0`, `multipart/related`).
 - `mhtml_reader.py`: Leverages standard Python `email.message` to recursively traverse parts, decode base64/quoted-printable payloads, extract the primary HTML tree, and cache binary attachments.
 - `html_reader.py`: Handles standalone HTML files with automated charset detection (UTF-8, ISO-8859-1, Windows-1252).
 
-### 3.2 Provider Engine (`src/ai_conversation/providers/`)
+### 3.2 Provider Engine (`src/chatprint/providers/`)
 All providers inherit from `ConversationProvider`:
 ```python
 class ConversationProvider(ABC):
@@ -77,11 +77,11 @@ class ConversationProvider(ABC):
 - **ChatGPTProvider**: Identifies turns via `data-message-author-role` and `data-testid` conversation containers. Extracts code blocks and markdown tables.
 - **GenericProvider**: Uses text density and container scoring heuristics (`score_conversation_container`) to detect chat dialogues on unrecognized pages.
 
-### 3.3 Extraction, Cleaning & Validation (`src/ai_conversation/extraction/`)
+### 3.3 Extraction, Cleaning & Validation (`src/chatprint/extraction/`)
 - `cleaner.py`: Removes non-content tags, hidden tags (`display: none`), and provider-specific unwanted CSS selectors.
 - `normalizer.py`: Transforms HTML elements into structured `ContentBlock` subclasses.
 - `validator.py`: Ensures extracted conversation has non-empty text, plausible turn count, and absence of pure navigation UI.
 
-### 3.4 PDF Generation Engine (`src/ai_conversation/pdf/`)
+### 3.4 PDF Generation Engine (`src/chatprint/pdf/`)
 - `renderer.py`: Uses ReportLab `SimpleDocTemplate` and Platypus flowables (`Paragraph`, `Table`, `Preformatted`, `HRFlowable`).
 - `styles.py`: Defines color palettes and typographies. Uses a custom two-pass `NumberedCanvas` to calculate total pages dynamically and print "Page X of Y" with a professional header/footer.

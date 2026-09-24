@@ -2,10 +2,10 @@
 
 from pathlib import Path
 
-from ai_conversation.input.html_reader import read_html_file
-from ai_conversation.input.mhtml_reader import read_mhtml_file
-from ai_conversation.models import Role
-from ai_conversation.providers.gemini import GeminiProvider
+from chatprint.input.html_reader import read_html_file
+from chatprint.input.mhtml_reader import read_mhtml_file
+from chatprint.models import Role
+from chatprint.providers.gemini import GeminiProvider
 
 
 def test_gemini_detection_confidence(gemini_simple_html: Path, gemini_with_sidebar_mhtml: Path):

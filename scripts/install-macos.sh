@@ -1,9 +1,9 @@
-#!/usr/bin/env bash
-# AI Conversation CLI - macOS Setup & Installer
+﻿#!/usr/bin/env bash
+# ChatPrint CLI - macOS Setup & Installer
 set -e
 
 echo -e "\033[1;36m==================================================\033[0m"
-echo -e "\033[1;36m          AI Conversation CLI Setup (macOS)       \033[0m"
+echo -e "\033[1;36m          ChatPrint CLI Setup (macOS)       \033[0m"
 echo -e "\033[1;36m==================================================\033[0m"
 echo ""
 
@@ -42,7 +42,7 @@ if [ -z "$PYTHON_CMD" ]; then
     PYTHON_CMD="python3"
 fi
 
-DEFAULT_INSTALL_DIR="$HOME/Library/Application Support/AIConversationCLI"
+DEFAULT_INSTALL_DIR="$HOME/Library/Application Support/ChatPrintCLI"
 echo ""
 read -p "Install directory [$DEFAULT_INSTALL_DIR]: " USER_DIR
 INSTALL_DIR="${USER_DIR:-$DEFAULT_INSTALL_DIR}"
@@ -56,7 +56,7 @@ echo "Creating virtual environment at $VENV_DIR..."
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(dirname "$SCRIPT_DIR")"
 
-echo "Installing AI Conversation CLI..."
+echo "Installing ChatPrint CLI..."
 "$VENV_DIR/bin/pip" install --upgrade pip
 "$VENV_DIR/bin/pip" install "$REPO_ROOT"
 
@@ -70,9 +70,9 @@ fi
 
 echo ""
 echo "Running smoke test..."
-"$BIN_DIR/ai-conversation" --version
-"$BIN_DIR/ai-conversation" doctor
+"$BIN_DIR/chatprint" --version
+"$BIN_DIR/chatprint" doctor
 
 echo ""
-echo -e "\033[1;32mAI Conversation CLI installed successfully!\033[0m"
+echo -e "\033[1;32mChatPrint CLI installed successfully!\033[0m"
 echo "Restart your terminal or run: source $ZSHRC"

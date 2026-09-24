@@ -4,11 +4,11 @@ from pathlib import Path
 
 from pypdf import PdfReader
 
-from ai_conversation.input.detector import InputFormat, detect_format
-from ai_conversation.input.mhtml_reader import read_mhtml_file
-from ai_conversation.pdf.renderer import render_conversation_to_pdf
-from ai_conversation.providers import detect_best_provider
-from ai_conversation.utils.files import resolve_output_pdf_path
+from chatprint.input.detector import InputFormat, detect_format
+from chatprint.input.mhtml_reader import read_mhtml_file
+from chatprint.pdf.renderer import render_conversation_to_pdf
+from chatprint.providers import detect_best_provider
+from chatprint.utils.files import resolve_output_pdf_path
 
 
 def test_gemini_full_conversion_pipeline(gemini_with_sidebar_mhtml: Path, tmp_path: Path):

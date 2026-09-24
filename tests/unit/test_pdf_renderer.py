@@ -4,7 +4,7 @@ from pathlib import Path
 
 from pypdf import PdfReader
 
-from ai_conversation.models import (
+from chatprint.models import (
     CodeBlock,
     Conversation,
     HeadingBlock,
@@ -14,7 +14,7 @@ from ai_conversation.models import (
     Role,
     TableBlock,
 )
-from ai_conversation.pdf.renderer import render_conversation_to_pdf
+from chatprint.pdf.renderer import render_conversation_to_pdf
 
 
 def test_pdf_renderer_creates_valid_readable_pdf(tmp_path: Path):
