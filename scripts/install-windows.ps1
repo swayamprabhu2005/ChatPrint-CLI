@@ -1,4 +1,4 @@
-﻿# ChatPrint CLI - Windows Installer & Python 3.10.8 Bootstrapper
+# ChatPrint CLI - Windows Installer & Python 3.10.8 Bootstrapper
 # Requires PowerShell 5.1+
 
 $ErrorActionPreference = "Stop"
@@ -28,16 +28,26 @@ $Candidates = @(
 
 foreach ($cmd in $Candidates) {
     try {
-        $vOutput = & (Get-Command $cmd.Split(' ')[0] -ErrorAction SilentlyContinue) $cmd.Split(' ')[1..($cmd.Split(' ').Length-1)] -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}')" 2>$null
-        if ($vOutput -eq $TargetVersion) {
-            $FoundPython = $cmd
-            break
+        $parts = $cmd.Split(' ')
+        $exe = $parts[0]
+        $cmdArgs = if ($parts.Length -gt 1) { $parts[1..($parts.Length-1)] } else { @() }
+        $cmdInfo = Get-Command $exe -ErrorAction SilentlyContinue
+        if ($cmdInfo) {
+            $vOutput = & $exe @cmdArgs -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}')" 2>$null
+            if ($vOutput -and $vOutput.Trim() -eq $TargetVersion) {
+                # Resolve the absolute path to python.exe so invocation is guaranteed to succeed
+                $resolvedExe = & $exe @cmdArgs -c "import sys; print(sys.executable)" 2>$null
+                if ($resolvedExe -and (Test-Path $resolvedExe.Trim())) {
+                    $FoundPython = $resolvedExe.Trim()
+                    break
+                }
+            }
         }
     } catch {}
 }
 
 if ($FoundPython) {
-    Write-Host "✓ Python $TargetVersion detected ($FoundPython)" -ForegroundColor Green
+    Write-Host "[OK] Python $TargetVersion detected ($FoundPython)" -ForegroundColor Green
     $PythonExe = $FoundPython
 } else {
     Write-Host "Python $TargetVersion was not detected on this system." -ForegroundColor Yellow
@@ -64,7 +74,7 @@ if ($FoundPython) {
         Remove-Item -Force $TempInstaller
         exit 1
     }
-    Write-Host "✓ SHA-256 checksum verified ($ActualHash)" -ForegroundColor Green
+    Write-Host "[OK] SHA-256 checksum verified ($ActualHash)" -ForegroundColor Green
 
     # Install into private directory without global interference
     $PrivatePythonDir = "$env:LOCALAPPDATA\ChatPrintCLI\runtime"
@@ -81,6 +91,9 @@ Write-Host "Where would you like to install ChatPrint CLI?" -ForegroundColor Cya
 Write-Host "Default: $DefaultInstallDir" -ForegroundColor Gray
 $UserDir = Read-Host "Enter path (leave empty for default)"
 $InstallDir = if ([string]::IsNullOrWhiteSpace($UserDir)) { $DefaultInstallDir } else { $UserDir.Trim() }
+if ($InstallDir -match '^[a-zA-Z]:\\?$') {
+    $InstallDir = Join-Path $InstallDir "ChatPrintCLI"
+}
 
 Write-Host "Selected installation directory: $InstallDir" -ForegroundColor Gray
 if (!(Test-Path $InstallDir)) {
@@ -109,9 +122,9 @@ if ($UserPath -notlike "*$VenvScriptsDir*") {
     Write-Host "Adding $VenvScriptsDir to User PATH..." -ForegroundColor Cyan
     $NewPath = if ([string]::IsNullOrEmpty($UserPath)) { $VenvScriptsDir } else { "$UserPath;$VenvScriptsDir" }
     [Environment]::SetEnvironmentVariable("PATH", $NewPath, "User")
-    Write-Host "✓ PATH updated." -ForegroundColor Green
+    Write-Host "[OK] PATH updated." -ForegroundColor Green
 } else {
-    Write-Host "✓ CLI directory is already on PATH." -ForegroundColor Gray
+    Write-Host "[OK] CLI directory is already on PATH." -ForegroundColor Gray
 }
 
 # 7. Smoke Test Verification

@@ -63,3 +63,64 @@ def test_gemini_multiturn(gemini_multiturn_html: Path):
     assert "code snippet" in conversation.messages[2].plain_text
     assert conversation.messages[3].role == Role.ASSISTANT
     assert "asyncio.run" in conversation.messages[3].plain_text
+
+
+def test_gemini_ai_mode_multiturn():
+    from bs4 import BeautifulSoup
+    html = """
+    <html>
+      <head><title>is kilowatt a good company - Google Search</title></head>
+      <body>
+        <div id="header"><button>Sign In</button></div>
+        <div id="searchform"><input name="q" value="is kilowatt a good company" /></div>
+        <div id="rhs"><div>Right sidebar recommendations</div></div>
+        <main>
+          <h2>You said: is kilowatt a good company 10:24 AM</h2>
+          <div>
+            <h3>AI Mode reply for is kilowatt a good company</h3>
+            <div>
+              <div class="mZJni">
+                <button aria-label="Share">Share</button>
+                <button aria-label="Copy">Copy</button>
+                <p>Kilowott is a tech company specializing in design and digital engineering.</p>
+                <ul>
+                  <li>Strong learning culture</li>
+                  <li>Good work life balance</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <h2>You sent: what about salary? and said: tell me the range</h2>
+          <div>
+            <h3>AI Mode reply for what about salary?</h3>
+            <div>
+              <div class="mZJni">
+                <p>Salary ranges vary by role and seniority level.</p>
+              </div>
+            </div>
+          </div>
+        </main>
+      </body>
+    </html>
+    """
+    soup = BeautifulSoup(html, "html.parser")
+    provider = GeminiProvider()
+    assert provider.detect_confidence(soup, html, {}) >= 0.8
+
+    conv = provider.extract(soup, {}, "test.html")
+    assert len(conv.messages) == 4
+    assert conv.messages[0].role == Role.USER
+    assert conv.messages[0].plain_text == "is kilowatt a good company"
+    assert conv.messages[1].role == Role.ASSISTANT
+    assert "Kilowott is a tech company" in conv.messages[1].plain_text
+    assert conv.messages[2].role == Role.USER
+    assert conv.messages[2].plain_text == "tell me the range"
+    assert conv.messages[3].role == Role.ASSISTANT
+    assert "Salary ranges vary" in conv.messages[3].plain_text
+
+    # Verify UI elements stripped
+    all_text = " ".join(m.plain_text for m in conv.messages)
+    assert "Sign In" not in all_text
+    assert "Right sidebar recommendations" not in all_text
+    assert "Share" not in all_text
+    assert "Copy" not in all_text

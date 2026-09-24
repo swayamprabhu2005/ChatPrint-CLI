@@ -53,9 +53,9 @@ def cli():
 @click.option(
     "-o",
     "--output",
-    "output_dir",
-    type=click.Path(file_okay=False, path_type=Path),
-    help="Target directory for generated PDF.",
+    "output_target",
+    type=click.Path(path_type=Path),
+    help="Target directory or destination .pdf file path.",
 )
 @click.option(
     "--output-file",
@@ -83,7 +83,7 @@ def cli():
 )
 def convert(
     input_path: Path,
-    output_dir: Path | None,
+    output_target: Path | None,
     output_file: Path | None,
     source: str,
     force: bool,
@@ -91,6 +91,14 @@ def convert(
 ):
     """Convert a saved .mhtml, .mht, .html, or .htm conversation webpage to PDF."""
     try:
+        output_dir: Path | None = None
+        if output_target:
+            if output_target.suffix.lower() == ".pdf":
+                if not output_file:
+                    output_file = output_target
+            else:
+                output_dir = output_target
+
         console.print("[bold cyan]ChatPrint CLI[/bold cyan]")
         console.print("[dim]────────────────────────────────────────[/dim]")
 

@@ -1,4 +1,4 @@
-﻿# ChatPrint CLI
+# ChatPrint CLI
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
@@ -74,12 +74,18 @@ If you do not have Git installed on your computer:
 2. Click the green **`<> Code`** button near the top right, then click **`Download ZIP`**.
 3. Extract the downloaded `.zip` file to any temporary folder (e.g. your Downloads folder).
 4. Run the installer for your operating system:
-   - **Windows (PowerShell)**:
-     Right-click `scripts\install-windows.ps1` and select **"Run with PowerShell"**, or open PowerShell inside the extracted folder and run:
-     ```powershell
-     Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
-     .\scripts\install-windows.ps1
-     ```
+   - **Windows**:
+     - **Option A (Easiest - Command Prompt or Double-Click)**:
+       Simply double-click **`install.bat`** in the folder, or in Command Prompt (`cmd.exe`) run:
+       ```cmd
+       install.bat
+       ```
+     - **Option B (PowerShell)**:
+       Open PowerShell inside the extracted folder and run:
+       ```powershell
+       powershell -ExecutionPolicy Bypass -File .\scripts\install-windows.ps1
+       ```
+       *(or right-click `scripts\install-windows.ps1` and choose **"Run with PowerShell"**)*
    - **macOS (Terminal)**:
      ```bash
      chmod +x scripts/install-macos.sh
@@ -172,7 +178,7 @@ Prints the application version.
 Converts a saved webpage to PDF.
 
 **Options:**
-- `-o, --output <DIR>`: Specify target directory for the generated PDF.
+- `-o, --output <DIR|FILE>`: Specify target directory or destination `.pdf` file path.
 - `--output-file <FILE>`: Explicitly specify destination PDF path.
 - `-s, --source [auto|gemini|chatgpt]`: Override automatic source detection (default: `auto`).
 - `-f, --force`: Overwrite existing output PDF without appending numerical suffix.
@@ -183,11 +189,11 @@ Converts a saved webpage to PDF.
 # Basic conversion (creates conversation.pdf next to input)
 chatprint convert chat.mhtml
 
+# Specify direct destination PDF file
+chatprint convert chat.mhtml -o "D:\MyDocs\Quantum_Report.pdf" --force
+
 # Specify custom output folder
 chatprint convert chat.mhtml --output "D:\PDFs"
-
-# Specify explicit file name and force overwrite
-chatprint convert chat.mhtml --output-file "D:\PDFs\summary.pdf" --force
 
 # Force Gemini provider mode
 chatprint convert chat.html --source gemini
@@ -206,13 +212,13 @@ ChatPrint Inspection
 ────────────────────────────────────────
 Input file:          C:\Users\User\Downloads\chat.mhtml
 Format:              MHTML
-Title:               is kilowatt a good company - Google Search
+Title:               is kilowatt a good company
 Detected provider:   Google Gemini AI Mode
-Confidence:          95%
-Total messages:      2
-User messages:       1
-Assistant messages:  1
-Embedded resources:  14
+Confidence:          100%
+Total messages:      14
+User messages:       7
+Assistant messages:  7
+Embedded resources:  174
 ```
 
 ### `chatprint doctor`
@@ -233,6 +239,32 @@ ChatPrint CLI Doctor
 
 System ready.
 ```
+
+---
+
+## Uninstallation
+
+If you ever wish to remove ChatPrint CLI from your system:
+
+### Option A: Using the Uninstaller (Recommended on Windows)
+Simply run **`uninstall.bat`** from the `ChatPrint-CLI-main` folder, or in PowerShell:
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\uninstall-windows.ps1
+```
+This automatically:
+1. Removes ChatPrint CLI from your User `PATH` environment variable.
+2. Prompts for confirmation and deletes the isolated virtual environment folder.
+
+### Option B: Manual Removal (Command Prompt / PowerShell)
+1. **Remove from PATH**:
+   ```powershell
+   $UserPath = [Environment]::GetEnvironmentVariable("PATH", "User")
+   $NewPath = ($UserPath -split ';' | Where-Object { $_ -and $_ -notlike "*ChatPrintCLI*" }) -join ';'
+   [Environment]::SetEnvironmentVariable("PATH", $NewPath, "User")
+   ```
+2. **Delete Installation Folder**:
+   - Default directory: `C:\Users\<YourUsername>\AppData\Local\ChatPrintCLI`
+   - Or whatever custom directory was chosen during installation (e.g. `E:\ChatPrintCLI`).
 
 ---
 

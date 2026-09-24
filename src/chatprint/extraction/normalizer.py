@@ -3,7 +3,7 @@
 import html
 import re
 
-from bs4 import NavigableString, Tag
+from bs4 import Comment, NavigableString, Tag
 
 from chatprint.models import (
     CodeBlock,
@@ -31,9 +31,16 @@ def _extract_text_with_inline_formatting(tag: Tag) -> str:
     """Convert child tags to readable text preserving basic emphasis and links."""
     parts: list[str] = []
     for child in tag.children:
+        if isinstance(child, Comment):
+            continue
+        if getattr(child, "decomposed", False):
+            continue
         if isinstance(child, NavigableString):
             parts.append(str(child))
         elif isinstance(child, Tag):
+            style = (child.get("style") or "").lower()
+            if "display: none" in style or "display:none" in style or "visibility: hidden" in style:
+                continue
             name = child.name.lower()
             inner = _extract_text_with_inline_formatting(child)
             if name in ("strong", "b"):
@@ -46,7 +53,7 @@ def _extract_text_with_inline_formatting(tag: Tag) -> str:
                 parts.append("\n")
             elif name == "a":
                 href = child.get("href")
-                if href and not href.startswith("#") and not href.startswith("javascript:"):
+                if href and not href.startswith("#") and not href.startswith("javascript:") and len(inner) < 80 and "\n" not in inner:
                     parts.append(f"[{inner}]({href})")
                 else:
                     parts.append(inner)
@@ -68,6 +75,11 @@ def element_to_content_blocks(container: Tag) -> list[ContentBlock]:
     blocks: list[ContentBlock] = []
 
     for child in container.children:
+        if isinstance(child, Comment):
+            continue
+        if getattr(child, "decomposed", False):
+            continue
+
         if isinstance(child, NavigableString):
             raw = str(child).strip()
             if raw:
@@ -77,11 +89,20 @@ def element_to_content_blocks(container: Tag) -> list[ContentBlock]:
         if not isinstance(child, Tag):
             continue
 
+        style = (child.get("style") or "").lower()
+        if "display: none" in style or "display:none" in style or "visibility: hidden" in style:
+            continue
+
         name = child.name.lower()
 
-        # Headings
-        if name in ("h1", "h2", "h3", "h4", "h5", "h6"):
-            level = int(name[1])
+        # Headings: <h1>-<h6> or role="heading"
+        is_heading = (name in ("h1", "h2", "h3", "h4", "h5", "h6")) or (child.get("role") == "heading")
+        if is_heading:
+            if name.startswith("h") and len(name) == 2 and name[1].isdigit():
+                level = int(name[1])
+            else:
+                aria_lvl = child.get("aria-level", "3")
+                level = int(aria_lvl) if str(aria_lvl).isdigit() else 3
             text = normalize_text(child.get_text())
             if text:
                 blocks.append(HeadingBlock(level=level, text=text))

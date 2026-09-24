@@ -19,20 +19,30 @@ def safe_reportlab_text(text: str) -> str:
     if not text:
         return ""
 
+    # Replace currency symbols not in standard PDF Type 1 fonts
+    text = text.replace("₹", "Rs. ")
+
     # Convert characters that break XML
     text = html.escape(text)
 
     # Convert markdown bold **...**
-    text = re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", text)
+    text = re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", text, flags=re.DOTALL)
 
     # Convert markdown italic *...*
-    text = re.sub(r"\*(.+?)\*", r"<i>\1</i>", text)
+    text = re.sub(r"\*(.+?)\*", r"<i>\1</i>", text, flags=re.DOTALL)
 
     # Convert markdown code `...`
-    text = re.sub(r"`(.+?)`", r'<font face="Courier" color="#334155">\1</font>', text)
+    text = re.sub(r"`(.+?)`", r'<font face="Courier" color="#334155">\1</font>', text, flags=re.DOTALL)
 
     # Convert links [text](url)
-    text = re.sub(r"\[(.+?)\]\((https?://[^\s)]+)\)", r'<link href="\2" color="#2563eb"><u>\1</u></link>', text)
+    text = re.sub(r"\[(.+?)\]\((https?://[^\s)]+)\)", r'<link href="\2" color="#1a73e8"><u>\1</u></link>', text)
+
+    # Balance any interleaved or unclosed tags
+    try:
+        from bs4 import BeautifulSoup
+        text = str(BeautifulSoup(text, "html.parser"))
+    except Exception:
+        pass
 
     return text
 

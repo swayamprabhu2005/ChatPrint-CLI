@@ -111,6 +111,32 @@ def get_pdf_styles():
         )
     )
 
+    # User Chat Bubble Text
+    styles.add(
+        ParagraphStyle(
+            "UserBubbleText",
+            parent=styles["Normal"],
+            fontName="Helvetica",
+            fontSize=10,
+            leading=14,
+            textColor=TEXT_DARK,
+        )
+    )
+
+    # User Chat Bubble Timestamp
+    styles.add(
+        ParagraphStyle(
+            "UserBubbleTime",
+            parent=styles["Normal"],
+            fontName="Helvetica",
+            fontSize=8,
+            leading=10,
+            textColor=SECONDARY_COLOR,
+            alignment=2,  # Right-aligned
+            spaceBefore=3,
+        )
+    )
+
     # Assistant Header
     styles.add(
         ParagraphStyle(

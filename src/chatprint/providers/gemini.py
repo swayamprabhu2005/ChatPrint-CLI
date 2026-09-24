@@ -77,15 +77,15 @@ class GeminiProvider(ConversationProvider):
 
         # URL / Location signals
         if "gemini.google.com" in snapshot_loc:
-            score += 0.7
+            score += 0.8
         elif "google.com/search" in snapshot_loc or "google.com" in snapshot_loc:
-            score += 0.3
+            score += 0.6
 
         # Title signals
         if "gemini" in title:
             score += 0.5
         elif "google search" in title:
-            score += 0.2
+            score += 0.4
 
         # Structural & Textual signals
         raw_lower = raw_html.lower()
@@ -101,6 +101,10 @@ class GeminiProvider(ConversationProvider):
             score += 0.5
         if soup.find(attrs={"aria-label": re.compile(r"AI Overview", re.IGNORECASE)}):
             score += 0.5
+        if soup.find(lambda e: e.name == "h3" and "ai mode reply" in e.get_text().lower()):
+            score += 0.9
+        if soup.find(lambda e: e.name == "h2" and any(p in e.get_text().lower() for p in ["you said:", "you sent:"])):
+            score += 0.9
 
         return min(1.0, score)
 
@@ -136,29 +140,108 @@ class GeminiProvider(ConversationProvider):
         messages: list[Message] = []
         turn_order = 1
 
-        # PATTERN 1: Multi-turn chat (gemini.google.com or Google AI Mode multi-turn)
-        # Look for explicit turn elements
-        turn_elements = working_soup.select(
-            "[data-message-author-role], .conversation-turn, .chat-turn, user-query, model-response, [data-turn-id]"
+        # PATTERN 0: Google Search AI Mode Multi-turn Chat (h2 "You said:" / "You sent:" and h3 "AI Mode reply")
+        user_h2s = working_soup.find_all(
+            lambda e: e.name == "h2" and any(prefix in e.get_text().lower() for prefix in ["you said:", "you sent:"])
         )
+        if user_h2s:
+            for user_h2 in user_h2s:
+                raw_h2_text = user_h2.get_text(strip=True)
+                m = re.search(r"(?:you said:|and said:)\s*(.*)", raw_h2_text, re.IGNORECASE)
+                user_text = m.group(1).strip() if m else raw_h2_text
 
-        if turn_elements:
-            for turn in turn_elements:
-                role_attr = (turn.get("data-message-author-role") or "").lower()
-                tag_name = turn.name.lower()
-                classes = " ".join(turn.get("class") or []).lower()
+                # Extract timestamp if present at end of prompt (e.g. "11:48 am")
+                time_m = re.search(r"\b(\d{1,2}:\d{2}\s*(?:[ap]m)?)\s*$", user_text, re.IGNORECASE)
+                timestamp = time_m.group(1) if time_m else None
+                if timestamp:
+                    user_text = user_text[:time_m.start()].strip()
 
-                if "user" in role_attr or "user" in classes or tag_name == "user-query":
-                    role = Role.USER
-                elif "model" in role_attr or "assistant" in role_attr or "model" in classes or tag_name == "model-response":
-                    role = Role.ASSISTANT
-                else:
-                    role = Role.ASSISTANT
-
-                blocks = element_to_content_blocks(turn)
-                if blocks:
-                    messages.append(Message(role=role, blocks=blocks, order=turn_order))
+                if user_text:
+                    messages.append(
+                        Message(
+                            role=Role.USER,
+                            blocks=[ParagraphBlock(text=normalize_text(user_text))],
+                            order=turn_order,
+                            timestamp=timestamp,
+                        )
+                    )
                     turn_order += 1
+
+                h3_reply = user_h2.find_next(lambda e: e.name == "h3" and "ai mode reply" in e.get_text().lower())
+                if h3_reply:
+                    sib = h3_reply.find_next_sibling()
+                    mzjni = sib.find("div", class_="mZJni") if sib else None
+                    target_container = mzjni or sib
+                    if target_container:
+                        # Decompose UI widgets inside the response container
+                        for unwanted in list(target_container.find_all(lambda tag: (
+                            tag.name in ["button", "svg", "form"]
+                            or any(cls in (tag.get("class") or []) for cls in ["YHsVn", "cRH23c", "ub891", "ofHStc", "hjPQm", "U9BD8", "QNca8b", "NMq1me"])
+                            or any(w in tag.get("aria-label", "").lower() for w in ["feedback", "share", "copy", "like", "dislike"])
+                            or tag.get("data-crb-el") is not None
+                        ))):
+                            if not getattr(unwanted, "decomposed", False):
+                                unwanted.decompose()
+
+                        blocks = element_to_content_blocks(target_container)
+                        clean_blocks = []
+                        for b in blocks:
+                            if hasattr(b, "text"):
+                                t = re.sub(r"TgQPHd[^\s]*", "", b.text).strip()
+                                t = re.sub(r"wi9wGf[^\s]*", "", t).strip()
+                                t = re.sub(r"qkimaf[^\s]*", "", t).strip()
+                                t = re.sub(r"cqw1tb[^\s]*", "", t).strip()
+                                if any(ign in t.lower() for ign in ["copied to clipboard", "thanks for letting us know", "google may use", "saved time", "clearhelpful", "share public link", "a copy of this chat"]):
+                                    continue
+                                if len(t) > 2 and not t.startswith("|||"):
+                                    b.text = t
+                                    clean_blocks.append(b)
+                            elif hasattr(b, "items"):
+                                new_items = []
+                                for it in b.items:
+                                    it = re.sub(r"TgQPHd[^\s]*", "", it).strip()
+                                    it = re.sub(r"wi9wGf[^\s]*", "", it).strip()
+                                    if len(it) > 2 and not any(ign in it.lower() for ign in ["share public link", "copied to clipboard"]):
+                                        new_items.append(it)
+                                if new_items:
+                                    b.items = new_items
+                                    clean_blocks.append(b)
+                            else:
+                                clean_blocks.append(b)
+
+                        if clean_blocks:
+                            messages.append(
+                                Message(
+                                    role=Role.ASSISTANT,
+                                    blocks=clean_blocks,
+                                    order=turn_order,
+                                )
+                            )
+                            turn_order += 1
+
+        # PATTERN 1: Multi-turn chat (gemini.google.com or standard data-message-author-role)
+        if not messages:
+            # Look for explicit turn elements
+            turn_elements = working_soup.select(
+                "[data-message-author-role], .conversation-turn, .chat-turn, user-query, model-response, [data-turn-id]"
+            )
+            if turn_elements:
+                for turn in turn_elements:
+                    role_attr = (turn.get("data-message-author-role") or "").lower()
+                    tag_name = turn.name.lower()
+                    classes = " ".join(turn.get("class") or []).lower()
+
+                    if "user" in role_attr or "user" in classes or tag_name == "user-query":
+                        role = Role.USER
+                    elif "model" in role_attr or "assistant" in role_attr or "model" in classes or tag_name == "model-response":
+                        role = Role.ASSISTANT
+                    else:
+                        role = Role.ASSISTANT
+
+                    blocks = element_to_content_blocks(turn)
+                    if blocks:
+                        messages.append(Message(role=role, blocks=blocks, order=turn_order))
+                        turn_order += 1
 
         # PATTERN 2: Google Search AI Overview / AI Mode container
         if not messages:

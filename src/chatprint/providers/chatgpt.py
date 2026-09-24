@@ -59,6 +59,10 @@ class ChatGPTProvider(ConversationProvider):
         snapshot_loc = metadata.get("snapshot_location", "").lower()
         title = (soup.title.string.strip() if soup.title and soup.title.string else "").lower()
 
+        # Disqualify if explicitly Google Search / Gemini
+        if "google.com" in snapshot_loc or "google search" in title:
+            return 0.0
+
         # URL / Location signals
         if "chatgpt.com" in snapshot_loc or "chat.openai.com" in snapshot_loc:
             score += 0.8
