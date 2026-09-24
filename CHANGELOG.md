@@ -1,9 +1,21 @@
-﻿# Changelog
+# Changelog
 
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [0.1.1] - 2026-09-24
+
+### Added
+- Google Search AI Mode multi-turn chat support with right-aligned user chat bubbles and timestamps.
+- Automated uninstaller script (`uninstall.bat` and `scripts/uninstall-windows.ps1`).
+
+### Fixed
+- Fixed raw citation hovercard payloads and HTML comments (`<!--TgQPHd|||...-->`) appearing in body text.
+- Fixed ReportLab XML tag mismatch errors when markdown tags interleave.
+- Fixed currency symbol rendering in standard PDF fonts (`₹` mapped to `Rs.`).
+- Enhanced `-o, --output` CLI option to seamlessly accept destination `.pdf` files or directories.
 
 ## [0.1.0] - 2026-09-24
 
