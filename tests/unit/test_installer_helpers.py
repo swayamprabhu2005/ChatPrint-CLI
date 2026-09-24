@@ -45,10 +45,10 @@ def test_validate_install_dir(tmp_path: Path):
     valid, _ = validate_install_dir(custom_dir)
     assert valid is True
 
-    # Test protected system directory rejection
-    bad_dir = Path("C:/Windows/System32")
-    valid_bad, _ = validate_install_dir(bad_dir)
-    assert valid_bad is False
+    # Test protected system directory rejection across platforms
+    assert validate_install_dir(Path("C:/Windows/System32"))[0] is False
+    assert validate_install_dir(Path("/etc"))[0] is False
+    assert validate_install_dir(Path("/bin"))[0] is False
 
 
 def test_doctor_diagnostic():

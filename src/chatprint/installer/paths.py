@@ -37,23 +37,34 @@ def validate_install_dir(target_dir: Path) -> tuple[bool, str]:
     Returns:
         Tuple of (is_valid: bool, reason_message: str).
     """
+    raw_str = str(target_dir).lower().replace("\\", "/")
     path = Path(target_dir).resolve()
+    str_path = str(path).lower().replace("\\", "/")
 
     # Disallow root or dangerous system directories
-    str_path = str(path).lower()
     disallowed_prefixes = [
-        "c:\\windows",
-        "c:\\program files",
+        "c:/windows",
+        "c:/program files",
         "/bin",
         "/sbin",
-        "/usr/bin",
-        "/usr/sbin",
+        "/usr",
         "/etc",
+        "/private/etc",
         "/root",
+        "/system",
     ]
     for disallowed in disallowed_prefixes:
-        if str_path == disallowed or str_path.startswith(disallowed + os.sep):
+        if (
+            raw_str == disallowed
+            or raw_str.startswith(disallowed + "/")
+            or str_path == disallowed
+            or str_path.startswith(disallowed + "/")
+        ):
             return False, f"Cannot install into protected system directory: {path}"
+
+    # Disallow filesystem root
+    if str_path in ("/", "c:", "c:/"):
+        return False, f"Cannot install into root directory: {path}"
 
     # Test directory creation and write permission
     try:
