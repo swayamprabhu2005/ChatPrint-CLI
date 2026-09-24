@@ -1,0 +1,51 @@
+From: <Saved by Blink>
+Snapshot-Content-Location: https://chatgpt.com/c/67890-test
+Subject: Rust Memory Safety - ChatGPT
+Date: Wed, 24 Sep 2026 12:00:00 -0000
+MIME-Version: 1.0
+Content-Type: multipart/related;
+	type="text/html";
+	boundary="----=_NextPart_000_CHATGPT_TEST"
+
+------=_NextPart_000_CHATGPT_TEST
+Content-Type: text/html; charset="utf-8"
+Content-Location: https://chatgpt.com/c/67890-test
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>Rust Memory Safety - ChatGPT</title>
+</head>
+<body>
+<nav id="sidebar">Chat History Sidebar</nav>
+<div data-testid="conversation-turn-1" data-message-author-role="user">
+    <div class="prose"><p>Why does Rust not need a garbage collector?</p></div>
+</div>
+<div data-testid="conversation-turn-2" data-message-author-role="assistant">
+    <div class="markdown prose">
+        <p>Rust achieves memory safety without a garbage collector through its compile-time <b>ownership system</b> and borrow checker.</p>
+        <h2>Core Rules</h2>
+        <ul>
+            <li>Each value in Rust has an owner.</li>
+            <li>There can only be one owner at a time.</li>
+            <li>When the owner goes out of scope, the value is dropped.</li>
+        </ul>
+    </div>
+</div>
+<div data-testid="conversation-turn-3" data-message-author-role="user">
+    <div class="prose"><p>What happens when data is borrowed?</p></div>
+</div>
+<div data-testid="conversation-turn-4" data-message-author-role="assistant">
+    <div class="markdown prose">
+        <p>Borrowing lets you reference data without taking ownership. You can have either:</p>
+        <ol>
+            <li>Any number of immutable references (<code>&amp;T</code>).</li>
+            <li>Exactly one mutable reference (<code>&amp;mut T</code>) at a time.</li>
+        </ol>
+    </div>
+</div>
+<footer class="text-xs text-center">ChatGPT can make mistakes.</footer>
+</body>
+</html>
+
+------=_NextPart_000_CHATGPT_TEST--

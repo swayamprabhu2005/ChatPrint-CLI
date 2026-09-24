@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Flask Quickstart - ChatGPT</title>
+</head>
+<body>
+    <header><button>Model: GPT-4o</button></header>
+    <div data-testid="conversation-turn-1" data-message-author-role="user">
+        <p>Give me a minimal Flask hello world application and comparison table.</p>
+    </div>
+    <div data-testid="conversation-turn-2" data-message-author-role="assistant">
+        <div class="markdown prose">
+            <p>Here is a basic Flask application:</p>
+            <pre><code class="language-python">from flask import Flask
+
+app = Flask(__name__)
+
+@app.route("/")
+def hello():
+    return "Hello, World!"
+
+if __name__ == "__main__":
+    app.run(debug=True)</code></pre>
+            <h3>Framework Comparison</h3>
+            <table>
+                <thead>
+                    <tr><th>Feature</th><th>Flask</th><th>FastAPI</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Typing</td><td>Optional</td><td>Pydantic / Native</td></tr>
+                    <tr><td>Async</td><td>Supported</td><td>Native async/await</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

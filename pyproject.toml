@@ -1,0 +1,66 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ai-conversation"
+version = "0.1.0"
+description = "Convert locally saved AI conversation webpages (Gemini, ChatGPT) into clean, professional PDFs."
+readme = "README.md"
+license = { text = "MIT" }
+authors = [
+    { name = "AI Conversation CLI Contributors" }
+]
+requires-python = ">=3.10"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: End Users/Desktop",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Utilities",
+    "Topic :: Text Processing :: Markup :: HTML",
+    "Topic :: Printing",
+]
+dependencies = [
+    "click>=8.1.0",
+    "rich>=13.0.0",
+    "beautifulsoup4>=4.12.0",
+    "reportlab>=4.0.0",
+    "platformdirs>=3.0.0",
+    "pypdf>=3.17.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "ruff>=0.1.0",
+    "build>=1.0.0",
+]
+
+[project.scripts]
+ai-conversation = "ai_conversation.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/swayamprabhu2005/AI-Conversation-CLI"
+Repository = "https://github.com/swayamprabhu2005/AI-Conversation-CLI"
+Issues = "https://github.com/swayamprabhu2005/AI-Conversation-CLI/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ai_conversation"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+ignore = ["BLE001", "S112"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

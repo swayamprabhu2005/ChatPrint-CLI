@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Python Asyncio Guide - Gemini</title>
+</head>
+<body>
+    <header class="gemini-header">
+        <div class="user-profile">Account details</div>
+    </header>
+    <main>
+        <!-- Turn 1 User -->
+        <div class="conversation-turn" data-message-author-role="user">
+            <p>How does asyncio work in Python?</p>
+        </div>
+
+        <!-- Turn 1 Model -->
+        <div class="conversation-turn" data-message-author-role="model">
+            <p>Python's <code>asyncio</code> provides a single-threaded, cooperative event loop that executes tasks concurrently.</p>
+            <h3>Key Concepts</h3>
+            <ul>
+                <li><b>Event Loop:</b> The central manager orchestrating coroutines and I/O callbacks.</li>
+                <li><b>Coroutines:</b> Functions defined with <code>async def</code>.</li>
+            </ul>
+        </div>
+
+        <!-- Turn 2 User -->
+        <div class="conversation-turn" data-message-author-role="user">
+            <p>Can you show a short code snippet?</p>
+        </div>
+
+        <!-- Turn 2 Model -->
+        <div class="conversation-turn" data-message-author-role="model">
+            <p>Here is an example using <code>asyncio.run()</code> and <code>asyncio.gather()</code>:</p>
+            <pre><code class="language-python">import asyncio
+
+async def fetch_data(id):
+    await asyncio.sleep(1)
+    return {"id": id, "status": "ok"}
+
+async def main():
+    results = await asyncio.gather(fetch_data(1), fetch_data(2))
+    print(results)
+
+asyncio.run(main())</code></pre>
+        </div>
+    </main>
+    <footer class="app-footer">Settings | Privacy</footer>
+</body>
+</html>
